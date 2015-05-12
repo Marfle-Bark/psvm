@@ -115,6 +115,7 @@ void run(DWORD program[], bool enableDebug) {
 }
 
 void test() {
+  printf("\nPSVM is running in Test Mode!\n");
   DWORD test[] = {
     PUSH, 1,
     PUSH, 2,
