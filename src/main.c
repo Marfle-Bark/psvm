@@ -4,8 +4,9 @@
 //program instructions
 typedef enum {
   PUSH,  //PUSH X: Push DWORD X onto the stack.
-  ADD,  //ADD: Pop top two DWORDs off of the stack, add them, push Result.
   POP,  //POP: Pop top DWORD off the stack.
+  ADD,  //ADD: Pop top two DWORDs off of the stack, add them, push Result.
+  SUB,  //SUB: Pop top two DWORDS off the stack, subtract them, push Result.
   PEEK, //PEEK: Peek top DWORD off the stack and print.
   HALT   //HALT: End program execution.
 } InstructionSet;
@@ -14,8 +15,8 @@ typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 
-int ip = 0;
-int sp = -1;
+int ip = 0;           //instruction pointer
+int sp = -1;          //stack pointer
 DWORD stack[256];     //256-int stack
 bool running = true;  //"is the VM running?"
 bool debug = false;   //enable debug statements
@@ -24,10 +25,12 @@ char* getInstruction(int instr) {
   switch(instr) {
     case PUSH:
       return "PUSH";
-    case ADD:
-      return "ADD";
     case POP:
       return "POP";
+    case ADD:
+      return "ADD";
+    case SUB:
+      return "SUB";
     case PEEK:
       return "PEEK";
     case HALT:
@@ -58,10 +61,18 @@ void eval(DWORD code[]) {
     }
 
     case ADD: {
-      int a = stack[sp--];
-      int b = stack[sp--];
-      stack[++sp] = a + b;
-      if(debug) printf("**Added %i and %i and pushed %i.\n", a, b, (int)stack[sp]);
+      int x = stack[sp--];
+      int y = stack[sp--];
+      stack[++sp] = x + y;
+      if(debug) printf("**Added %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
+      break;
+    }
+
+    case SUB: {
+      int x = stack[sp--];
+      int y = stack[sp--];
+      stack[++sp] = x - y;
+      if(debug) printf("**Subtracted %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
       break;
     }
 
@@ -92,13 +103,14 @@ void run(DWORD program[], bool enableDebug) {
   
   int cycles = 0;
   while (running) {
-    eval(program);
     cycles++;
+    if(debug) printf("\nBegin cycle %i\n", cycles);
+    eval(program);
   }
 
   printf("\n\n***Closing PSVM...\n");
-  if(debug) printf("***VM ran for %i cycles.\n", cycles);
-  if(debug) dumpStack();
+  printf("***VM ran for %i cycles.\n", cycles);
+  dumpStack();
 }
 
 int main() {
@@ -110,8 +122,7 @@ int main() {
     PEEK,
     PUSH, 4,
     ADD,
-    POP,
-    PEEK,
+    SUB,
     HALT
   };
 
