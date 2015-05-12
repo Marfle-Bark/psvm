@@ -5,8 +5,10 @@
 typedef enum {
   PUSH,  //PUSH X: Push DWORD X onto the stack.
   POP,  //POP: Pop top DWORD off the stack.
-  ADD,  //ADD: Pop top two DWORDs off of the stack, add them, push Result.
-  SUB,  //SUB: Pop top two DWORDS off the stack, subtract them, push Result.
+  ADD,  //ADD: Pop top two DWORDs off of the stack, add them, push result.
+  SUB,  //SUB: Pop top two DWORDS off the stack, subtract them, push result.
+  MUL, //MUL: Pop two DWORDS off the stack, multiply them, push result.
+  DIV,  //DIV: Pop two DWORDS off the stack, divide them, push result.
   PEEK, //PEEK: Peek top DWORD off the stack and print.
   HALT   //HALT: End program execution.
 } InstructionSet;
@@ -23,20 +25,15 @@ bool debug = false;   //enable debug statements
 
 char* getInstruction(int instr) {
   switch(instr) {
-    case PUSH:
-      return "PUSH";
-    case POP:
-      return "POP";
-    case ADD:
-      return "ADD";
-    case SUB:
-      return "SUB";
-    case PEEK:
-      return "PEEK";
-    case HALT:
-      return "HALT";
-    default:
-      return "ERROR";
+    case PUSH:  return "PUSH";
+    case POP:   return "POP";
+    case ADD:   return "ADD";
+    case SUB:   return "SUB";
+    case MUL:   return "MUL";
+    case DIV:   return "DIV";
+    case PEEK:  return "PEEK";
+    case HALT:  return "HALT";
+    default:    return "ERROR";
     }
 }
 
@@ -73,6 +70,14 @@ void eval(DWORD code[]) {
       int y = stack[sp--];
       stack[++sp] = x - y;
       if(debug) printf("**Subtracted %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
+      break;
+    }
+
+    case MUL: {
+      break;
+    }
+
+    case DIV: {
       break;
     }
 
@@ -123,6 +128,11 @@ int main() {
     PUSH, 4,
     ADD,
     SUB,
+    PUSH, 2,
+    PUSH, 7,
+    PUSH, 9,
+    MUL,
+    DIV,
     HALT
   };
 
