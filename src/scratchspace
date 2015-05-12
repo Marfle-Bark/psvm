@@ -7,3 +7,13 @@ MarfScript 0.1 description
   Division is integer-based
   All numbers (operands AND results) are 32-bit
   Standard order of operations applies
+
+Compiler:
+  Tokenize
+    Types of tokens:
+      Integer
+      Operator
+  Build parse tree
+    Operators are binary
+  Traverse tree into code
+    Marfle bark

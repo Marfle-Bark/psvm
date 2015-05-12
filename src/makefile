@@ -1,5 +1,5 @@
 COMPILER = gcc
-SOURCES = main.c
+SOURCES = main.h main.c comp.c
 LONG_FLAGS = -Wall -Wextra -g -std=c1x
 SHORT_FLAGS = -g -std=c1x
 OUTPUT = psvm.out
