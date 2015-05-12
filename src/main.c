@@ -1,3 +1,6 @@
+#ifndef _MAIN_C
+#define _MAIN_C
+
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -148,3 +151,5 @@ int main() {
 
   return 0;
 }
+
+#endif
