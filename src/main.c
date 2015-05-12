@@ -74,10 +74,18 @@ void eval(DWORD code[]) {
     }
 
     case MUL: {
+      int x = stack[sp--];
+      int y = stack[sp--];
+      stack[++sp] = x * y;
+      if(debug) printf("**Multiplied %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
       break;
     }
 
     case DIV: {
+      int x = stack[sp--];
+      int y = stack[sp--];
+      stack[++sp] = x / y;
+      if(debug) printf("**Divided %i by %i and pushed %i.\n", x, y, (int)stack[sp]);
       break;
     }
 
