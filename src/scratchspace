@@ -1,0 +1,4 @@
+Instructions to Implement
+MULT X Y: Multiply X * Y and push Result.
+DIV X Y: Divide X / Y and push Result.
+SUB X Y: Subtract X - Y and push Result.
