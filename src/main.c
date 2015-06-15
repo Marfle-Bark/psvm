@@ -104,8 +104,7 @@ void run(DWORD program[], bool enableDebug) {
   
   int cycles = 0;
   while (running) {
-    cycles++;
-    if(debug) printf("\nBegin cycle %i\n", cycles);
+    if(debug) printf("\nBegin cycle %i\n", ++cycles);
     eval(program);
   }
 
@@ -114,26 +113,53 @@ void run(DWORD program[], bool enableDebug) {
   dumpStack();
 }
 
-void test() {
+void testVM() {
+  
+  
+  // DWORD test[] = {
+  //   PUSH, 1,
+  //   PUSH, 2,
+  //   PUSH, 2,
+  //   ADD,
+  //   PEEK,
+  //   PUSH, 4,
+  //   ADD,
+  //   SUB,
+  //   PUSH, 2,
+  //   PUSH, 7,
+  //   PUSH, 9,
+  //   MUL,
+  //   DIV,
+  //   HALT
+  // };
+
   printf("\nPSVM is running in Test Mode!\n");
-  DWORD test[] = {
-    PUSH, 1,
-    PUSH, 2,
-    PUSH, 2,
-    ADD,
-    PEEK,
-    PUSH, 4,
-    ADD,
-    SUB,
-    PUSH, 2,
-    PUSH, 7,
-    PUSH, 9,
-    MUL,
-    DIV,
-    HALT
-  };
+
+  FILE* testfile = fopen("test.psc", "r");
+  
+  int count = getc(testfile);
+
+  //burn blank bytes before code starts
+  int subdivisions = sizeof(DWORD) / sizeof(char);
+  subdivisions--;
+  int i;
+  for(i = 0; i < subdivisions; i++) {
+    getc(testfile);
+  }
+  
+  printf("Count = %i.", count);
+  DWORD test[count];
+
+  fread(test, sizeof(DWORD), count, testfile);
 
   run(test, true);
+}
+
+int main() {
+  testCompiler();
+  testVM();
+
+  return 0;
 }
 
 #endif
