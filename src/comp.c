@@ -29,63 +29,74 @@ Node NodeBuilder(int type, int value, Node* left, Node* right) {
   return o;
 }
 
-DWORD* parse(char* code) {
-  
+void parse(const char* code, DWORD* program) {
+  printf("Beginning parsing.\n");
+  DWORD* buffer[1024];  //buffer for compiled code
+  int count = 0;        //number of compiled instructions
+
+  count = 6;  //TEST COUNT
+
+  program[0] = count; //pack count into first position
+  DWORD test[] = {PUSH, 2, PUSH, 2, ADD, HALT}; //TEST PROGRAM
+  printf("Copying memory.\n");
+  memcpy(program, test, 6 * sizeof(DWORD));
+  printf("Finished parsing. Returning compiled program.\n");
+}
+
+//insert one char into output file
+void insertchar(const char input, FILE* file) {
+  putc(input, file);
+  int subdivisions = sizeof(DWORD) / sizeof(char);
+  subdivisions--;
+  int i;
+  for(i = 0; i < subdivisions; i++) {
+    putc((char)0, file);
+  }
+}
+
+//concatenates directory and filename into one string, or any two strings
+char* catstr(char* dir, char* file) {
+  //allocate enough space for full filename
+  char* fullname = malloc(strlen(dir) + strlen(file) + 2);
+  strcpy(fullname, dir);
+  strcat(fullname, file);
+  return fullname;
 }
 
 void compile(char* code, char* outfile) {
   
   printf("Beginning compilation.\n");
 
-  //setup filename
-  char* start = "../bin/";  //beginning of filename
-  char* filename = malloc(strlen(start) + strlen(outfile) + 2);  //allocate enough space for filename
-  strcpy(filename, start);
-  strcat(filename, outfile);
-
+  //setup output file
+  char* filename = catstr("../bin/", outfile);
   FILE* out = fopen(filename, "w"); //open file for writing
-
   printf("File opened.\n");
-
-  DWORD program[1024];  //program can be up to 1024 * 32 bits = 4kB
-
-  //program = parse(code);
   
-  DWORD test[] = {PUSH, 2, PUSH, 2, ADD, HALT}; //TEST PROGRAM
+  DWORD* program = malloc(sizeof(DWORD) * 1024);
+  parse(code, program);
+
   int count = 6;  //TEST LENGTH
-
-  putc((char)count, out);
-  int subdivisions = sizeof(DWORD) / sizeof(char);
-  subdivisions--;
-  int i;
-  for(i = 0; i < subdivisions; i++) {
-    putc((char)0, out);
-  }
-
-  // copy program length and code/data into program buffer
-  memcpy(program, test, count * sizeof(DWORD));
-
-  printf("Memory copied.\n");
+  insertchar((char)count, out);
 
   fwrite(program, sizeof(DWORD), count, out); //write out to file
-
   printf("File written.\n");
 
   fclose(out);  //close file gracefully
-
   printf("File closed.\n");
+
+  free(program);
+  printf("Memory freed.\n");
 }
 
 void testCompiler() {
   printf("Running testCompiler().\n");
   
   //simple arithmetic tests
-  char* sample = "2 + 2\n3-1\n4* 3  \n 9/ 3  "; //deliberate awful formatting
-  char* outfile = "test.psc";
-
-  printf("char*s created.\n");
+  char* sample0 = "2+2";
+  char* sample1 = "2+2\n2-2\n2*2\n2/2";
+  char* sample2 = "2 + 2\n3-1\n4* 3  \n 9/ 3  "; //deliberate awful formatting
   
-  compile(sample, outfile);
+  compile(sample0, "test.psc");
   printf("Compilation completed.\n");
 }
 

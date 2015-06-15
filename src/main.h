@@ -15,8 +15,8 @@ typedef enum {
 
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
-typedef unsigned long DWORD;
-typedef unsigned long long QWORD; //this typedef looks ugly af
+typedef unsigned int DWORD;
+typedef unsigned long QWORD; //this typedef looks ugly af
 
 void run(DWORD[], bool);
 void test(void);

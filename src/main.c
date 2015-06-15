@@ -46,34 +46,34 @@ void eval(DWORD code[]) {
     }
 
     case ADD: {
-      int x = stack[sp--];
-      int y = stack[sp--];
-      stack[++sp] = x + y;
-      if(debug) printf("**Added %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
+      int left = stack[sp--];
+      int right = stack[sp--];
+      stack[++sp] = left + right;
+      if(debug) printf("**Added %i and %i and pushed %i.\n", left, right, (int)stack[sp]);
       break;
     }
 
     case SUB: {
-      int x = stack[sp--];
-      int y = stack[sp--];
-      stack[++sp] = x - y;
-      if(debug) printf("**Subtracted %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
+      int left = stack[sp--];
+      int right = stack[sp--];
+      stack[++sp] = left - right;
+      if(debug) printf("**Subtracted %i and %i and pushed %i.\n", left, right, (int)stack[sp]);
       break;
     }
 
     case MUL: {
-      int x = stack[sp--];
-      int y = stack[sp--];
-      stack[++sp] = x * y;
-      if(debug) printf("**Multiplied %i and %i and pushed %i.\n", x, y, (int)stack[sp]);
+      int left = stack[sp--];
+      int right = stack[sp--];
+      stack[++sp] = left * right;
+      if(debug) printf("**Multiplied %i and %i and pushed %i.\n", left, right, (int)stack[sp]);
       break;
     }
 
     case DIV: {
-      int x = stack[sp--];
-      int y = stack[sp--];
-      stack[++sp] = x / y;
-      if(debug) printf("**Divided %i by %i and pushed %i.\n", x, y, (int)stack[sp]);
+      int left = stack[sp--];
+      int right = stack[sp--];
+      stack[++sp] = left / right;
+      if(debug) printf("**Divided %i bright %i and pushed %i.\n", left, right, (int)stack[sp]);
       break;
     }
 
@@ -137,14 +137,14 @@ void testVM() {
 
   FILE* testfile = fopen("test.psc", "r");
   
-  int count = getc(testfile);
+  int count = (int) getc(testfile);
 
   //burn blank bytes before code starts
   int subdivisions = sizeof(DWORD) / sizeof(char);
   subdivisions--;
   int i;
   for(i = 0; i < subdivisions; i++) {
-    getc(testfile);
+    printf("%i", getc(testfile));
   }
   
   printf("Count = %i.", count);
