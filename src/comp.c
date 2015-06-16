@@ -29,10 +29,24 @@ Node NodeBuilder(int type, int value, Node* left, Node* right) {
   return o;
 }
 
-void parse(const char* code, DWORD* program) {
+void removewhitespace(FILE* rawcode, char* purecode) {
+  int c;
+  while((c = fgetc(rawcode)) != EOF) {
+  printf("\nTEMP\n");
+    switch(c) {
+      case ' ': break;  //ignore spaces
+      default: break; //ignore unknown characters
+    }
+  }
+}
+
+void parse(const FILE* code, DWORD* program) {
   printf("Beginning parsing.\n");
-  DWORD* buffer[1024];  //buffer for compiled code
+  DWORD* buffer[1024];  //compiled code buffer: 1024 * 32b = 4kB
   int count = 0;        //number of compiled instructions
+
+  char purecode[1024 * 16];  //uncompiled code buffer: 1024 * 16kB * 8b = 256kB
+  removewhitespace(code, purecode);
 
   count = 6;  //TEST COUNT
 
@@ -63,7 +77,7 @@ char* catstr(char* dir, char* file) {
   return fullname;
 }
 
-void compile(char* code, char* outfile) {
+void compile(const FILE* code, char* outfile) {
   
   printf("Beginning compilation.\n");
 
