@@ -29,32 +29,45 @@ Node NodeBuilder(int type, int value, Node* left, Node* right) {
   return o;
 }
 
-void removewhitespace(FILE* rawcode, char* purecode) {
-  int c;
-  while((c = fgetc(rawcode)) != EOF) {
-  printf("\nTEMP\n");
-    switch(c) {
-      case ' ': break;  //ignore spaces
-      default: break; //ignore unknown characters
+void removewhitespace(const char* rawcode, char* purecode) {
+  printf("Removing whitespace.\n");
+  char* pos = rawcode;  //where we are in the code to be parsed
+  int right, left;
+
+  while(*pos != '\n') { //end on end of line for this test
+    switch((int)pos) {  //kinda dirty cast hack
+      printf("%i\n", (int) pos);
+      case ' ':
+      pos++;  //ignore spaces
+      break;
+
+      default:
+        *purecode++ = *pos++; //just copy anything else we see
+        break;
     }
   }
 }
 
-void parse(const FILE* code, DWORD* program) {
+void parse(char* code, DWORD* program) {
   printf("Beginning parsing.\n");
   DWORD* buffer[1024];  //compiled code buffer: 1024 * 32b = 4kB
   int count = 0;        //number of compiled instructions
 
   char purecode[1024 * 16];  //uncompiled code buffer: 1024 * 16kB * 8b = 256kB
   removewhitespace(code, purecode);
+  printf("%s\n", purecode);
 
   count = 6;  //TEST COUNT
-
-  program[0] = count; //pack count into first position
   DWORD test[] = {PUSH, 2, PUSH, 2, ADD, HALT}; //TEST PROGRAM
+  
+  copyToFile(program, test, count);
+  printf("Finished parsing.\n");
+}
+
+void copyToFile(DWORD* program, DWORD* test, int count) {
   printf("Copying memory.\n");
+  program[0] = count; //pack count into first position
   memcpy(program, test, 6 * sizeof(DWORD));
-  printf("Finished parsing. Returning compiled program.\n");
 }
 
 //insert one char into output file
@@ -77,7 +90,7 @@ char* catstr(char* dir, char* file) {
   return fullname;
 }
 
-void compile(const FILE* code, char* outfile) {
+void compile(char* code, char* outfile) {
   
   printf("Beginning compilation.\n");
 
@@ -105,8 +118,10 @@ void compile(const FILE* code, char* outfile) {
 void testCompiler() {
   printf("Running testCompiler().\n");
   
+  //ALL code MUST end in newline
+
   //simple arithmetic tests
-  char* sample0 = "2+2";
+  char* sample0 = "2 + 2 \n";
   char* sample1 = "2+2\n2-2\n2*2\n2/2";
   char* sample2 = "2 + 2\n3-1\n4* 3  \n 9/ 3  "; //deliberate awful formatting
   

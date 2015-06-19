@@ -144,7 +144,6 @@ void testVM() {
   subdivisions--;
   int i;
   for(i = 0; i < subdivisions; i++) {
-    printf("%i", getc(testfile));
   }
   
   printf("Count = %i.", count);
